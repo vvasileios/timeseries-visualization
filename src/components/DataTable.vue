@@ -3,20 +3,26 @@
     <table class="w-full">
       <thead class="bg-gray-100 border-2 shadow-md">
         <tr>
-          <th class="p-4 text-xl font-bold text-left">Date</th>
-          <th class="p-4 text-xl font-bold text-left">Time</th>
-          <th class="p-4 text-xl font-bold text-left">DE_Price (€)</th>
-          <th class="p-4 text-xl font-bold text-left">GR_Price (€)</th>
-          <th class="p-4 text-xl font-bold text-left">FR_Price (€)</th>
+          <th
+            v-for="(header, index) in headerItems"
+            :key="index"
+            class="p-4 text-xl font-bold text-left"
+          >
+            {{ header }}
+          </th>
         </tr>
       </thead>
       <tbody class="border-2">
-        <tr v-for="(data, index) in dataSets" :key="index" class="hover:underline border-b-2">
-          <td class="p-4 font-semibold"> {{ formatDate(data.DateTime).date }} </td>
-          <td class="p-4 font-semibold"> {{ formatDate(data.DateTime).time }} </td>
-          <td class="p-4 font-semibold"> {{ data.ENTSOE_DE_DAM_Price }} </td>
-          <td class="p-4 font-semibold"> {{ data.ENTSOE_GR_DAM_Price }} </td>
-          <td class="p-4 font-semibold"> {{ data.ENTSOE_FR_DAM_Price }} </td>
+        <tr
+          v-for="(data, index) in dataSets"
+          :key="index"
+          class="hover:underline border-b-2"
+        >
+          <td class="p-4 font-semibold">{{ formatDate(data.DateTime) }}</td>
+          <td class="p-4 font-semibold">{{ formatTime(data.DateTime) }}</td>
+          <td class="p-4 font-semibold">{{ data.ENTSOE_DE_DAM_Price }}</td>
+          <td class="p-4 font-semibold">{{ data.ENTSOE_GR_DAM_Price }}</td>
+          <td class="p-4 font-semibold">{{ data.ENTSOE_FR_DAM_Price }}</td>
         </tr>
       </tbody>
     </table>
@@ -24,23 +30,31 @@
 </template>
 
 <script>
+import moment from "moment";
+
 export default {
   props: {
-    dataSets:{
+    dataSets: {
       type: Array,
-      required: true
-    }
+      required: true,
+    },
+  },
+
+  data() {
+    return {
+      headerItems: ["Date", "Time", "DE_Price €", "GR_Price €", "FR_Price €"],
+      tableData: {},
+    };
   },
 
   methods: {
     formatDate(dateTime) {
-      const date = new Date(dateTime)
+      return moment(dateTime).format("DD/MM/YYYY");
+    },
 
-      return{
-        date: date.toLocaleDateString(),
-        time: date.toLocaleTimeString()
-      }
-    }
-  }
-}
+    formatTime(dateTime) {
+      return moment(dateTime).format("LT");
+    },
+  },
+};
 </script>

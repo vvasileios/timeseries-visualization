@@ -1,41 +1,39 @@
 <template>
   <div class="bg-white min-h-screen">
-    <header class="h-14 shadow-xl border-b-2 w-full flex items-center justify-center">
+    <header
+      class="h-14 shadow-xl border-b-2 w-full flex items-center justify-center"
+    >
       <a>
-        <img class="h-8" src="/assets/stellarblue-logo.png" alt="logo">
+        <img class="h-8" src="/assets/stellarblue-logo.png" alt="logo" />
       </a>
     </header>
-    
+
     <main class="">
       <DataTable :data-sets="dataSets" />
+      <LineChart />
     </main>
   </div>
 </template>
 
 <script>
-// import axios from "axios";
 import DataTable from "./components/DataTable.vue";
-import timeSeries from "/timeseries.json"
+import LineChart from "./components/LineChart.vue";
+import timeSeries from "/timeseries.json";
 
 export default {
   components: {
-    DataTable
+    DataTable,
+    LineChart,
   },
 
   data() {
     return {
-      dataSets: timeSeries 
+      dataSets: timeSeries,
     };
   },
 
-  // mounted() {
-  //   axios.get("/timeseries.json").then(response => {
-  //     console.log(response)
-  //     this.dataSets = response.data;
-  //     console.log(this.dataSets)
-  //   }).catch(error => {
-  //     console.error("Error fetching data:", error);
-  //   });
-  // }
+  methods: {},
+
+  mounted() {},
 };
 </script>
