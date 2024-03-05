@@ -1,7 +1,7 @@
 <template>
-  <div class="bg-white min-h-screen">
+  <div class="min-h-screen">
     <header
-      class="h-14 shadow-xl border-b-2 w-full flex items-center justify-center"
+      class="h-14 bg-white shadow-xl border-b-2 w-full flex items-center justify-center sticky top-0 z-50"
     >
       <a>
         <img class="h-8" src="/assets/stellarblue-logo.png" alt="logo" />

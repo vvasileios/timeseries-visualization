@@ -6,7 +6,7 @@
           <th
             v-for="(header, index) in headerItems"
             :key="index"
-            class="p-4 text-xl font-bold text-left"
+            class="p-3 text-lg font-bold"
           >
             {{ header }}
           </th>
@@ -16,17 +16,27 @@
         <tr
           v-for="(data, index) in displayedData"
           :key="index"
-          class="hover:underline border-b-2"
+          class="hover:opacity-60 border-b-2"
         >
-          <td class="p-4 font-semibold">{{ formatDate(data.DateTime) }}</td>
-          <td class="p-4 font-semibold">{{ formatTime(data.DateTime) }}</td>
-          <td class="p-4 font-semibold">{{ data.ENTSOE_DE_DAM_Price }}</td>
-          <td class="p-4 font-semibold">{{ data.ENTSOE_GR_DAM_Price }}</td>
-          <td class="p-4 font-semibold">{{ data.ENTSOE_FR_DAM_Price }}</td>
+          <td class="p-2 font-semibold text-center">
+            {{ formatDate(data.DateTime) }}
+          </td>
+          <td class="p-2 font-semibold text-center">
+            {{ formatTime(data.DateTime) }}
+          </td>
+          <td class="p-2 font-semibold text-center">
+            {{ data.ENTSOE_DE_DAM_Price }}
+          </td>
+          <td class="p-2 font-semibold text-center">
+            {{ data.ENTSOE_GR_DAM_Price }}
+          </td>
+          <td class="p-2 font-semibold text-center">
+            {{ data.ENTSOE_FR_DAM_Price }}
+          </td>
         </tr>
       </tbody>
     </table>
-    <div class="flex justify-between border-2 p-2">
+    <div class="flex justify-between border-2 p-1">
       <button
         class="ml-4 hover:underline cursor-pointer"
         :class="{
@@ -64,13 +74,7 @@ export default {
 
   data() {
     return {
-      headerItems: [
-        "Date",
-        "Time",
-        "Germany Price",
-        "Greece Price",
-        "France Price",
-      ],
+      headerItems: ["Date", "Time", "Germany (€)", "Greece (€)", "France (€)"],
       currentPage: 0,
       itemsPerPage: 24,
     };
