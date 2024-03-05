@@ -5,72 +5,44 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+import VueApexCharts from "vue3-apexcharts";
 import moment from "moment";
-import ApexCharts from "apexcharts";
-import timeSeries from "/timeseries.json";
 
 export default {
   components: {
-    ApexCharts,
+    apexchart: VueApexCharts,
   },
-
-  data() {
-    return {
-      dataSets: [],
-      chartOptions: {},
-      series: [],
-    };
+  computed: {
+    ...mapGetters(["getPaginatedData", "getCurrentPage"]),
+    series() {
+      return [
+        { name: "Germany Price", data: this.priceDE() },
+        { name: "Greece Price", data: this.priceGR() },
+        { name: "France Price", data: this.priceFR() },
+      ];
+    },
+    chartOptions() {
+      return {
+        chart: { id: "linechart" },
+        xaxis: { categories: this.timeOfPrices() },
+      };
+    },
   },
-
-  mounted() {
-    this.dataSets = timeSeries;
-    this.chartOptions = {
-      chart: {
-        id: "linechart",
-      },
-      xaxis: {
-        categories: this.datesForPrices(),
-      },
-    };
-    this.series = [
-      {
-        name: "Germany Price",
-        data: this.priceDE(),
-      },
-      {
-        name: "Greece Price",
-        data: this.priceGR(),
-      },
-      {
-        name: "France Price",
-        data: this.priceFR(),
-      },
-    ];
-  },
-
   methods: {
     priceDE() {
-      return this.dataSets.map((data) => {
-        return data.ENTSOE_DE_DAM_Price;
-      });
+      return this.getPaginatedData.map((data) => data.ENTSOE_DE_DAM_Price);
     },
-
     priceGR() {
-      return this.dataSets.map((data) => {
-        return data.ENTSOE_GR_DAM_Price;
-      });
+      return this.getPaginatedData.map((data) => data.ENTSOE_GR_DAM_Price);
     },
-
     priceFR() {
-      return this.dataSets.map((data) => {
-        return data.ENTSOE_FR_DAM_Price;
-      });
+      return this.getPaginatedData.map((data) => data.ENTSOE_FR_DAM_Price);
     },
-
-    datesForPrices() {
-      return this.dataSets.map((data) => {
-        return moment(data.DateTime).format("DD/MM");
-      });
+    timeOfPrices() {
+      return this.getPaginatedData.map((data) =>
+        moment(data.DateTime).format("LT")
+      );
     },
   },
 };

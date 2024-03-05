@@ -6,7 +6,7 @@
           <th
             v-for="(header, index) in headerItems"
             :key="index"
-            class="p-3 text-lg font-bold"
+            class="p-3 text-lg font-bold select-none"
           >
             {{ header }}
           </th>
@@ -14,23 +14,23 @@
       </thead>
       <tbody class="border-2">
         <tr
-          v-for="(data, index) in displayedData"
+          v-for="(data, index) in dataPerPage"
           :key="index"
           class="hover:opacity-60 border-b-2"
         >
-          <td class="p-2 font-semibold text-center">
+          <td :class="[dataStyles]">
             {{ formatDate(data.DateTime) }}
           </td>
-          <td class="p-2 font-semibold text-center">
+          <td :class="[dataStyles]">
             {{ formatTime(data.DateTime) }}
           </td>
-          <td class="p-2 font-semibold text-center">
+          <td :class="[dataStyles]">
             {{ data.ENTSOE_DE_DAM_Price }}
           </td>
-          <td class="p-2 font-semibold text-center">
+          <td :class="[dataStyles]">
             {{ data.ENTSOE_GR_DAM_Price }}
           </td>
-          <td class="p-2 font-semibold text-center">
+          <td :class="[dataStyles]">
             {{ data.ENTSOE_FR_DAM_Price }}
           </td>
         </tr>
@@ -38,9 +38,9 @@
     </table>
     <div class="flex justify-between border-2 p-1">
       <button
-        class="ml-4 hover:underline cursor-pointer"
+        class="ml-4 hover:underline cursor-pointer select-none"
         :class="{
-          'cursor-not-allowed pointer-events-none opacity-50':
+          'cursor-not-allowed pointer-events-none opacity-50 select-none':
             currentPage === 0,
         }"
         @click="loadPreviousData"
@@ -48,10 +48,10 @@
         Previous
       </button>
       <button
-        class="mr-4 hover:underline cursor-pointer"
+        class="mr-4 hover:underline cursor-pointer select-none"
         :class="{
-          'cursor-not-allowed pointer-events-none opacity-50':
-            currentPage === totalPages - 1,
+          'cursor-not-allowed pointer-events-none opacity-50 select-none':
+            isLastPage,
         }"
         @click="loadNextData"
       >
@@ -62,33 +62,27 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import moment from "moment";
 
 export default {
-  props: {
-    dataSets: {
-      type: Array,
-      required: true,
-    },
-  },
-
   data() {
     return {
       headerItems: ["Date", "Time", "Germany (€)", "Greece (€)", "France (€)"],
-      currentPage: 0,
-      itemsPerPage: 24,
+      dataStyles: "p-2 font-semibold text-center select-none",
     };
   },
 
   computed: {
-    totalPages() {
-      return Math.ceil(this.dataSets.length / this.itemsPerPage);
-    },
+    ...mapGetters({
+      data: "getDataSets",
+      itemsPerPage: "getItemsPerPage",
+      dataPerPage: "getPaginatedData",
+      currentPage: "getCurrentPage",
+    }),
 
-    displayedData() {
-      const startIndex = this.currentPage * this.itemsPerPage;
-      const endIndex = startIndex + this.itemsPerPage;
-      return this.dataSets.slice(startIndex, endIndex);
+    isLastPage() {
+      return this.currentPage === this.data.length / this.itemsPerPage - 1;
     },
   },
 
@@ -102,15 +96,11 @@ export default {
     },
 
     loadPreviousData() {
-      if (this.currentPage > 0) {
-        this.currentPage--;
-      }
+      this.$store.commit("setCurrentPage", this.$store.state.currentPage - 1);
     },
 
     loadNextData() {
-      if (this.currentPage < this.totalPages - 1) {
-        this.currentPage++;
-      }
+      this.$store.commit("setCurrentPage", this.$store.state.currentPage + 1);
     },
   },
 };

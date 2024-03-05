@@ -10,7 +10,8 @@
 
     <main class="flex flex-grow">
       <div class="w-1/2 p-4">
-        <DataTable :data-sets="dataSets" />
+        <VueDatePicker />
+        <DataTable />
       </div>
 
       <div class="w-1/2 p-4">
@@ -21,24 +22,19 @@
 </template>
 
 <script>
+import VueDatePicker from "@vuepic/vue-datepicker";
 import DataTable from "./components/DataTable.vue";
 import LineChart from "./components/LineChart.vue";
-import timeSeries from "/timeseries.json";
 
 export default {
   components: {
     DataTable,
     LineChart,
+    VueDatePicker,
   },
 
-  data() {
-    return {
-      dataSets: timeSeries,
-    };
+  created() {
+    this.$store.dispatch("loadData");
   },
-
-  methods: {},
-
-  mounted() {},
 };
 </script>
