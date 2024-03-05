@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container mx-auto mt-36">
     <apexchart type="line" :options="chartOptions" :series="series"></apexchart>
   </div>
 </template>
@@ -26,7 +26,7 @@ export default {
     this.dataSets = timeSeries;
     this.chartOptions = {
       chart: {
-        id: "vuechart-example",
+        id: "linechart",
       },
       xaxis: {
         categories: this.datesForPrices(),
@@ -34,15 +34,15 @@ export default {
     };
     this.series = [
       {
-        name: "DE_Price",
+        name: "Germany Price",
         data: this.priceDE(),
       },
       {
-        name: "GR_Price",
+        name: "Greece Price",
         data: this.priceGR(),
       },
       {
-        name: "FR_Price",
+        name: "France Price",
         data: this.priceFR(),
       },
     ];
@@ -69,7 +69,7 @@ export default {
 
     datesForPrices() {
       return this.dataSets.map((data) => {
-        return moment(data.DateTime).format("DD/MM/YYYY");
+        return moment(data.DateTime).format("DD/MM");
       });
     },
   },

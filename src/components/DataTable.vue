@@ -14,7 +14,7 @@
       </thead>
       <tbody class="border-2">
         <tr
-          v-for="(data, index) in dataSets"
+          v-for="(data, index) in displayedData"
           :key="index"
           class="hover:underline border-b-2"
         >
@@ -26,6 +26,28 @@
         </tr>
       </tbody>
     </table>
+    <div class="flex justify-between border-2 p-2">
+      <button
+        class="ml-4 hover:underline cursor-pointer"
+        :class="{
+          'cursor-not-allowed pointer-events-none opacity-50':
+            currentPage === 0,
+        }"
+        @click="loadPreviousData"
+      >
+        Previous
+      </button>
+      <button
+        class="mr-4 hover:underline cursor-pointer"
+        :class="{
+          'cursor-not-allowed pointer-events-none opacity-50':
+            currentPage === totalPages - 1,
+        }"
+        @click="loadNextData"
+      >
+        Next
+      </button>
+    </div>
   </div>
 </template>
 
@@ -42,9 +64,28 @@ export default {
 
   data() {
     return {
-      headerItems: ["Date", "Time", "DE_Price €", "GR_Price €", "FR_Price €"],
-      tableData: {},
+      headerItems: [
+        "Date",
+        "Time",
+        "Germany Price",
+        "Greece Price",
+        "France Price",
+      ],
+      currentPage: 0,
+      itemsPerPage: 24,
     };
+  },
+
+  computed: {
+    totalPages() {
+      return Math.ceil(this.dataSets.length / this.itemsPerPage);
+    },
+
+    displayedData() {
+      const startIndex = this.currentPage * this.itemsPerPage;
+      const endIndex = startIndex + this.itemsPerPage;
+      return this.dataSets.slice(startIndex, endIndex);
+    },
   },
 
   methods: {
@@ -54,6 +95,18 @@ export default {
 
     formatTime(dateTime) {
       return moment(dateTime).format("LT");
+    },
+
+    loadPreviousData() {
+      if (this.currentPage > 0) {
+        this.currentPage--;
+      }
+    },
+
+    loadNextData() {
+      if (this.currentPage < this.totalPages - 1) {
+        this.currentPage++;
+      }
     },
   },
 };

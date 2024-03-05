@@ -8,9 +8,14 @@
       </a>
     </header>
 
-    <main class="">
-      <DataTable :data-sets="dataSets" />
-      <LineChart />
+    <main class="flex flex-grow">
+      <div class="w-1/2 p-4">
+        <DataTable :data-sets="dataSets" />
+      </div>
+
+      <div class="w-1/2 p-4">
+        <LineChart />
+      </div>
     </main>
   </div>
 </template>
