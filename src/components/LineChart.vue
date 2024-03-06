@@ -13,6 +13,7 @@ export default {
   components: {
     apexchart: VueApexCharts,
   },
+
   computed: {
     ...mapGetters(["getPaginatedData", "getCurrentPage"]),
     series() {
@@ -29,6 +30,7 @@ export default {
       };
     },
   },
+
   methods: {
     priceDE() {
       return this.getPaginatedData.map((data) => data.ENTSOE_DE_DAM_Price);

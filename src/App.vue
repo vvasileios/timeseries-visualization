@@ -10,7 +10,6 @@
 
     <main class="flex flex-grow">
       <div class="w-1/2 p-4">
-        <VueDatePicker />
         <DataTable />
       </div>
 
@@ -22,7 +21,6 @@
 </template>
 
 <script>
-import VueDatePicker from "@vuepic/vue-datepicker";
 import DataTable from "./components/DataTable.vue";
 import LineChart from "./components/LineChart.vue";
 
@@ -30,7 +28,6 @@ export default {
   components: {
     DataTable,
     LineChart,
-    VueDatePicker,
   },
 
   created() {

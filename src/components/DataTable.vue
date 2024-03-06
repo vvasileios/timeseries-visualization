@@ -1,5 +1,7 @@
 <template>
-  <div class="container mx-auto mt-8 shadow-xl">
+  <div class="mx-auto mt-8 shadow-xl">
+    <DatePicker />
+
     <table class="w-full">
       <thead class="bg-gray-100 border-2 shadow-md">
         <tr>
@@ -64,8 +66,13 @@
 <script>
 import { mapGetters } from "vuex";
 import moment from "moment";
+import DatePicker from "./DatePicker.vue";
 
 export default {
+  components: {
+    DatePicker,
+  },
+
   data() {
     return {
       headerItems: ["Date", "Time", "Germany (€)", "Greece (€)", "France (€)"],

@@ -35,9 +35,11 @@ export default createStore({
     setData(state, data) {
       state.dataSets = data;
     },
+
     setCurrentPage(state, page) {
       state.currentPage = page;
     },
+    
     setSelectedDate(state, date) {
       state.selectedDate = date;
     }
