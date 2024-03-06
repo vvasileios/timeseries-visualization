@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto mt-36">
+  <div class="container mx-auto mt-36 sticky top-16">
     <apexchart type="line" :options="chartOptions" :series="series"></apexchart>
   </div>
 </template>
@@ -15,7 +15,11 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["getFilteredData"]),
+    ...mapGetters({
+      filteredData: "getFilteredData",
+      selectedDate: "getSelectedDate",
+    }),
+
     series() {
       return [
         { name: "Germany Price", data: this.priceDE() },
@@ -23,6 +27,7 @@ export default {
         { name: "France Price", data: this.priceFR() },
       ];
     },
+
     chartOptions() {
       return {
         chart: { id: "linechart" },
@@ -33,18 +38,23 @@ export default {
 
   methods: {
     priceDE() {
-      return this.getFilteredData.map((data) => data.ENTSOE_DE_DAM_Price);
+      return this.filteredData.map((data) => data.ENTSOE_DE_DAM_Price);
     },
+
     priceGR() {
-      return this.getFilteredData.map((data) => data.ENTSOE_GR_DAM_Price);
+      return this.filteredData.map((data) => data.ENTSOE_GR_DAM_Price);
     },
+
     priceFR() {
-      return this.getFilteredData.map((data) => data.ENTSOE_FR_DAM_Price);
+      return this.filteredData.map((data) => data.ENTSOE_FR_DAM_Price);
     },
+
     timeOfPrices() {
-      return this.getFilteredData.map((data) =>
-        moment(data.DateTime).format("LT")
-      );
+      if (!this.selectedDate) {
+        return this.filteredData.map((data) =>
+          moment(data.DateTime).format("LT")
+        );
+      }
     },
   },
 };
