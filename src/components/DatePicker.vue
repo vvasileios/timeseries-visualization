@@ -7,7 +7,9 @@
       :max-date="maxDate"
       :start-date="minDate"
       range
+      auto-apply
       placeholder="Select Date"
+      @cleared="clearData"
     ></vue-date-picker>
   </div>
 </template>
@@ -28,6 +30,16 @@ export default {
     };
   },
 
+  watch: {
+    selectedDate: {
+      handler(newVal) {
+        if (newVal) {
+          this.$store.dispatch("updateSelectedDate", newVal);
+        }
+      },
+    },
+  },
+
   computed: {
     ...mapGetters({
       data: "getDataSets",
@@ -45,6 +57,12 @@ export default {
         return this.data[this.data.length - 1].DateTime;
       }
       return null;
+    },
+  },
+
+  methods: {
+    clearData() {
+      this.$store.dispatch("updateSelectedDate");
     },
   },
 };

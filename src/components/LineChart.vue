@@ -15,7 +15,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["getPaginatedData", "getCurrentPage"]),
+    ...mapGetters(["getFilteredData"]),
     series() {
       return [
         { name: "Germany Price", data: this.priceDE() },
@@ -33,16 +33,16 @@ export default {
 
   methods: {
     priceDE() {
-      return this.getPaginatedData.map((data) => data.ENTSOE_DE_DAM_Price);
+      return this.getFilteredData.map((data) => data.ENTSOE_DE_DAM_Price);
     },
     priceGR() {
-      return this.getPaginatedData.map((data) => data.ENTSOE_GR_DAM_Price);
+      return this.getFilteredData.map((data) => data.ENTSOE_GR_DAM_Price);
     },
     priceFR() {
-      return this.getPaginatedData.map((data) => data.ENTSOE_FR_DAM_Price);
+      return this.getFilteredData.map((data) => data.ENTSOE_FR_DAM_Price);
     },
     timeOfPrices() {
-      return this.getPaginatedData.map((data) =>
+      return this.getFilteredData.map((data) =>
         moment(data.DateTime).format("LT")
       );
     },

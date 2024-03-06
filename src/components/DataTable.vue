@@ -16,7 +16,7 @@
       </thead>
       <tbody class="border-2">
         <tr
-          v-for="(data, index) in dataPerPage"
+          v-for="(data, index) in filteredData"
           :key="index"
           class="hover:opacity-60 border-b-2"
         >
@@ -38,7 +38,7 @@
         </tr>
       </tbody>
     </table>
-    <div class="flex justify-between border-2 p-1">
+    <div v-if="!selectedDate" class="flex justify-between border-2 p-1">
       <button
         class="ml-4 hover:underline cursor-pointer select-none"
         :class="{
@@ -84,8 +84,9 @@ export default {
     ...mapGetters({
       data: "getDataSets",
       itemsPerPage: "getItemsPerPage",
-      dataPerPage: "getPaginatedData",
+      filteredData: "getFilteredData",
       currentPage: "getCurrentPage",
+      selectedDate: "getSelectedDate",
     }),
 
     isLastPage() {
