@@ -24,26 +24,19 @@ export default {
     VueDatePicker,
   },
 
-  data() {
-    return {
-      selectedDate: null,
-    };
-  },
-
-  watch: {
-    selectedDate: {
-      handler(newVal) {
-        if (newVal) {
-          this.$store.commit("SET_SELECTED_DATE", newVal);
-        }
-      },
-    },
-  },
-
   computed: {
     ...mapGetters({
       data: "getDataSets",
     }),
+
+    selectedDate: {
+      get() {
+        return this.$store.state.selectedDate;
+      },
+      set(value) {
+        this.$store.commit("SET_SELECTED_DATE", value);
+      },
+    },
 
     minDate() {
       if (this.data && this.data.length > 0) {

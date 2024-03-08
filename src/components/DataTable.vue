@@ -1,7 +1,16 @@
 <template>
-  <div class="bg-white border rounded-lg mt-10 min-w-[480px]">
-    <div class="bg-gray-100 min-w-[480px] pl-3 py-3">
+  <div class="border rounded-lg mt-10 overflow-x-auto">
+    <div
+      class="w-full min-w-[435.5px] pl-3 py-3 flex flex-row justify-between bg-gray-100"
+    >
       <DatePicker />
+      <button
+        v-if="selectedBoxes.length || selectedDate"
+        class="bg-blue-500 hover:bg-blue-600 text-white text-sm font-bold px-2 mr-4 rounded"
+        @click="clearSelectedData"
+      >
+        Clear
+      </button>
     </div>
 
     <table class="w-full text-sm text-left text-gray-500">
@@ -10,7 +19,7 @@
           <th :class="[headerStyles]">
             <CheckBox
               :is-activated="isHeaderCheckBoxActivated"
-              @update="(value) => toggleAllCheckBoxes(value)"
+              @update="toggleAllCheckBoxes"
             />
           </th>
           <th
@@ -26,16 +35,17 @@
         <tr
           v-for="(data, index) in filteredData"
           :key="index"
-          :class="
-            isSelected(data)
-              ? 'opacity-50 border-b'
-              : 'hover:opacity-60 border-b'
-          "
+          :class="[
+            isSelected(data) ? 'opacity-50' : 'hover:opacity-70',
+            'border-b',
+            'hover:cursor-pointer',
+          ]"
+          @click="toggleRowSelection(data)"
         >
           <td :class="[dataStyles]">
             <CheckBox
               :is-activated="isSelected(data)"
-              @update="(value) => toggleCheckBox(value, data)"
+              @update="(value) => toggleRowSelection(value, data)"
             />
           </td>
           <td :class="[dataStyles]">
@@ -56,7 +66,10 @@
         </tr>
       </tbody>
     </table>
-    <div v-if="!selectedDate" class="flex justify-between p-1">
+    <div
+      v-if="!selectedDate"
+      class="w-full min-w-[435.5px] flex justify-between p-1"
+    >
       <button
         class="ml-4 hover:underline cursor-pointer select-none font-semibold"
         :class="{
@@ -122,7 +135,7 @@ export default {
 
   methods: {
     formatDate(dateTime) {
-      return moment(dateTime).format("DD/MM/YYYY");
+      return moment(dateTime).format("MMM Do YY");
     },
 
     formatTime(dateTime) {
@@ -151,8 +164,8 @@ export default {
       }
     },
 
-    toggleCheckBox(value, row) {
-      if (value) {
+    toggleRowSelection(row) {
+      if (!this.isSelected(row)) {
         this.$store.commit("SET_SELECTED_CHECKBOXES", [
           ...this.selectedBoxes,
           row,
@@ -162,13 +175,10 @@ export default {
       }
     },
 
-    // toggleRowSelection(row) {
-    //   if (!this.selectedBoxes.includes(row)) {
-    //     this.$store.commit("setSelectedBoxes", [...this.selectedBoxes, row]);
-    //   } else {
-    //     this.$store.commit("removeSelectedBox", row);
-    //   }
-    // },
+    clearSelectedData() {
+      this.$store.commit("SET_SELECTED_CHECKBOXES", []);
+      this.$store.commit("SET_INITIAL_STATE");
+    },
   },
 };
 </script>

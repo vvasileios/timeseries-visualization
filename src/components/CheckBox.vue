@@ -1,5 +1,10 @@
 <template>
-  <input type="checkbox" :checked="isActivated" @change="toggleCheckBox" />
+  <input
+    class="hover:cursor-pointer"
+    type="checkbox"
+    :checked="isActivated"
+    @change="toggleCheckBox"
+  />
 </template>
 
 <script>
