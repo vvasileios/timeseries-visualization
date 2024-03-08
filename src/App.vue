@@ -1,19 +1,19 @@
 <template>
   <div class="min-h-screen">
     <header
-      class="h-14 bg-white shadow-xl border-b-2 w-full flex items-center justify-center sticky top-0 z-50"
+      class="h-14 bg-white shadow-xl border-b-2 min-w-[500px] flex items-center justify-center sticky top-0 z-50"
     >
       <a>
         <img class="h-8" src="/assets/stellarblue-logo.png" alt="logo" />
       </a>
     </header>
 
-    <main class="flex flex-grow">
-      <div class="w-1/2 p-4">
+    <main class="flex flex-col-reverse md:flex-row">
+      <div class="w-full md:w-1/2 p-4">
         <DataTable />
       </div>
 
-      <div class="w-1/2 p-4">
+      <div class="w-full md:w-1/2 p-4 md:mt-4">
         <LineChart />
       </div>
     </main>

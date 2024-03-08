@@ -34,7 +34,7 @@ export default {
     selectedDate: {
       handler(newVal) {
         if (newVal) {
-          this.$store.dispatch("updateSelectedDate", newVal);
+          this.$store.commit("setSelectedDate", newVal);
         }
       },
     },
@@ -62,7 +62,7 @@ export default {
 
   methods: {
     clearData() {
-      this.$store.dispatch("updateSelectedDate");
+      this.$store.commit("setInitialState");
     },
   },
 };

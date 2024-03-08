@@ -8,7 +8,8 @@ export default createStore({
       dataSets: [], 
       currentPage: 0,
       itemsPerPage: 24,
-      selectedDate: null
+      selectedDate: null,
+      selectedCheckBoxes: []
     }
   },
 
@@ -51,6 +52,10 @@ export default createStore({
     getSelectedDate(state) {
       return state.selectedDate
     },
+
+    getSelectedCheckBoxes(state) {
+      return state.selectedCheckBoxes
+    },
   },
 
   mutations: {
@@ -65,6 +70,22 @@ export default createStore({
     setSelectedDate(state, date) {
       state.selectedDate = date;
     },
+
+    setInitialState(state) {
+      state.selectedDate = null;
+      state.currentPage = 0;
+    },
+
+    setSelectedCheckBoxes(state, data) {
+      state.selectedCheckBoxes = data
+    },
+
+    removeSelectedCheckBox(state, data) {
+      state.selectedCheckBoxes = state.selectedCheckBoxes.filter(box => 
+        moment(box.DateTime).format("DD/MM/YY") !== moment(data.DateTime).format("DD/MM/YY") ||
+        moment(box.DateTime).format("LT") !== moment(data.DateTime).format("LT")
+      );
+    }    
   },
 
   actions: {
@@ -77,14 +98,5 @@ export default createStore({
           console.error('Error loading data:', error);
         });
     },
-
-    updateSelectedDate({commit, state}, date) {
-      commit('setSelectedDate', date)
-
-      if (state.currentPage !== 0) {
-        commit('setCurrentPage', 0);
-      }
-
-    }
   },
 });
