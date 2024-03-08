@@ -1,11 +1,11 @@
 import { createStore } from 'vuex';
-import axios from 'axios';
+import data from '/timeseries.json';
 import moment from 'moment';
 
 export default createStore({
   state() {
     return {
-      dataSets: [], 
+      dataSets: data, 
       currentPage: 0,
       itemsPerPage: 24,
       selectedDate: null,
@@ -59,28 +59,24 @@ export default createStore({
   },
 
   mutations: {
-    setData(state, data) {
-      state.dataSets = data;
-    },
-
-    setCurrentPage(state, page) {
+    SET_CURRENT_PAGE(state, page) {
       state.currentPage = page;
     },
     
-    setSelectedDate(state, date) {
+    SET_SELECTED_DATE(state, date) {
       state.selectedDate = date;
     },
 
-    setInitialState(state) {
+    SET_INITIAL_STATE(state) {
       state.selectedDate = null;
       state.currentPage = 0;
     },
 
-    setSelectedCheckBoxes(state, data) {
+    SET_SELECTED_CHECKBOXES(state, data) {
       state.selectedCheckBoxes = data
     },
 
-    removeSelectedCheckBox(state, data) {
+    REMOVE_SELECTED_CHECKBOX(state, data) {
       state.selectedCheckBoxes = state.selectedCheckBoxes.filter(box => 
         moment(box.DateTime).format("DD/MM/YY") !== moment(data.DateTime).format("DD/MM/YY") ||
         moment(box.DateTime).format("LT") !== moment(data.DateTime).format("LT")
@@ -88,15 +84,5 @@ export default createStore({
     }    
   },
 
-  actions: {
-    loadData({ commit }) {
-      return axios.get('/timeseries.json')
-        .then(response => {
-          commit('setData', response.data);
-        })
-        .catch(error => {
-          console.error('Error loading data:', error);
-        });
-    },
-  },
+  actions: {},
 });

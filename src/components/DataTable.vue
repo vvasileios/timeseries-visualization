@@ -130,13 +130,13 @@ export default {
     },
 
     loadPreviousData() {
-      this.$store.commit("setCurrentPage", this.$store.state.currentPage - 1);
-      this.$store.commit("setSelectedCheckBoxes", []);
+      this.$store.commit("SET_CURRENT_PAGE", this.$store.state.currentPage - 1);
+      this.$store.commit("SET_SELECTED_CHECKBOXES", []);
     },
 
     loadNextData() {
-      this.$store.commit("setCurrentPage", this.$store.state.currentPage + 1);
-      this.$store.commit("setSelectedCheckBoxes", []);
+      this.$store.commit("SET_CURRENT_PAGE", this.$store.state.currentPage + 1);
+      this.$store.commit("SET_SELECTED_CHECKBOXES", []);
     },
 
     isSelected(row) {
@@ -145,20 +145,20 @@ export default {
 
     toggleAllCheckBoxes(value) {
       if (value) {
-        this.$store.commit("setSelectedCheckBoxes", this.filteredData);
+        this.$store.commit("SET_SELECTED_CHECKBOXES", this.filteredData);
       } else {
-        this.$store.commit("setSelectedCheckBoxes", []);
+        this.$store.commit("SET_SELECTED_CHECKBOXES", []);
       }
     },
 
     toggleCheckBox(value, row) {
       if (value) {
-        this.$store.commit("setSelectedCheckBoxes", [
+        this.$store.commit("SET_SELECTED_CHECKBOXES", [
           ...this.selectedBoxes,
           row,
         ]);
       } else {
-        this.$store.commit("removeSelectedCheckBox", row);
+        this.$store.commit("REMOVE_SELECTED_CHECKBOX", row);
       }
     },
 

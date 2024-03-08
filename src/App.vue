@@ -29,9 +29,5 @@ export default {
     DataTable,
     LineChart,
   },
-
-  created() {
-    this.$store.dispatch("loadData");
-  },
 };
 </script>
