@@ -9,6 +9,8 @@
 
 <script>
 export default {
+  name: "CheckBox",
+
   props: {
     isActivated: {
       type: Boolean,

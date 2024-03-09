@@ -7,9 +7,10 @@
 <script>
 import { mapGetters } from "vuex";
 import VueApexCharts from "vue3-apexcharts";
-import moment from "moment";
 
 export default {
+  name: "LineChart",
+
   components: {
     apexchart: VueApexCharts,
   },
@@ -22,8 +23,9 @@ export default {
 
   computed: {
     ...mapGetters({
-      filteredData: "getFilteredData",
+      data: "getDataSets",
       selectedDate: "getSelectedDate",
+      dateComparison: "getDateComparison",
       selectedBoxes: "getSelectedCheckBoxes",
     }),
 
@@ -52,27 +54,22 @@ export default {
   },
 
   watch: {
-    filteredData: {
+    data: {
       handler(newVal) {
         if (newVal) {
           this.chartData = newVal;
         }
       },
-      immediate: true,
     },
 
     selectedBoxes: {
       handler(newVal) {
         if (newVal) {
-          this.chartData = this.filteredData.filter((data) =>
-            newVal.every(
-              (selectedBox) =>
-                moment(data.DateTime).format("DD/MM/YY") !==
-                  moment(selectedBox.DateTime).format("DD/MM/YY") ||
-                moment(data.DateTime).format("LT") !==
-                  moment(selectedBox.DateTime).format("LT")
-            )
-          );
+          this.chartData = this.data.filter((item) => {
+            return newVal.every((value) => {
+              return item.date !== value.date || item.time !== value.time;
+            });
+          });
         }
       },
       immediate: true,
@@ -93,13 +90,13 @@ export default {
     },
 
     xAxisFormat() {
-      const format = !this.selectedDate ? "LT" : "DD/MM";
-      const categories = this.chartData.map((data) =>
-        moment(data.DateTime).format(format)
-      );
+      const format = (item) =>
+        this.selectedDate && !this.dateComparison ? item.date : item.time;
+      const categories = this.chartData.map((data) => format(data));
 
-      const uniqueDatesCount =
-        format !== "LT" ? new Set(categories).size : undefined;
+      const uniqueDatesCount = this.selectedDate
+        ? new Set(categories).size - 1
+        : undefined;
 
       return {
         categories: categories,

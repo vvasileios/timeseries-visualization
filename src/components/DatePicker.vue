@@ -20,6 +20,8 @@ import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 
 export default {
+  name: "DatePicker",
+
   components: {
     VueDatePicker,
   },
@@ -34,26 +36,32 @@ export default {
         return this.$store.state.selectedDate;
       },
       set(value) {
+        this.$store.commit("SET_SELECTED_CHECKBOXES", []);
         this.$store.commit("SET_SELECTED_DATE", value);
       },
     },
 
     minDate() {
-      if (this.data && this.data.length > 0) {
-        return this.data[0].DateTime;
-      }
-      return null;
+      return this.getDate("min");
     },
 
     maxDate() {
-      if (this.data && this.data.length > 0) {
-        return this.data[this.data.length - 1].DateTime;
-      }
-      return null;
+      return this.getDate();
     },
   },
 
   methods: {
+    getDate(value) {
+      const dataSets = this.$store.state.dataSets;
+
+      if (!dataSets || dataSets.length === 0) return null;
+
+      if (value === "min") {
+        return dataSets[0].date;
+      }
+      return dataSets[dataSets.length - 1].date;
+    },
+
     clearData() {
       this.$store.commit("SET_INITIAL_STATE");
     },

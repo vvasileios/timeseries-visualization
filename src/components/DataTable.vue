@@ -33,35 +33,35 @@
       </thead>
       <tbody>
         <tr
-          v-for="(data, index) in filteredData"
+          v-for="(item, index) in data"
           :key="index"
           :class="[
-            isSelected(data) ? 'opacity-50' : 'hover:opacity-70',
+            isSelected(item) ? 'opacity-50' : 'hover:opacity-70',
             'border-b',
             'hover:cursor-pointer',
           ]"
-          @click="toggleRowSelection(data)"
+          @click="toggleRowSelection(item)"
         >
           <td :class="[dataStyles]">
             <CheckBox
-              :is-activated="isSelected(data)"
-              @update="(value) => toggleRowSelection(value, data)"
+              :is-activated="isSelected(item)"
+              @update="(value) => toggleRowSelection(value, item)"
             />
           </td>
           <td :class="[dataStyles]">
-            {{ formatDate(data.DateTime) }}
+            {{ formatDate(item.date) }}
           </td>
           <td :class="[dataStyles]">
-            {{ formatTime(data.DateTime) }}
+            {{ item.time }}
           </td>
           <td :class="[dataStyles]">
-            {{ data.ENTSOE_DE_DAM_Price }}
+            {{ item.ENTSOE_DE_DAM_Price }}
           </td>
           <td :class="[dataStyles]">
-            {{ data.ENTSOE_GR_DAM_Price }}
+            {{ item.ENTSOE_GR_DAM_Price }}
           </td>
           <td :class="[dataStyles]">
-            {{ data.ENTSOE_FR_DAM_Price }}
+            {{ item.ENTSOE_FR_DAM_Price }}
           </td>
         </tr>
       </tbody>
@@ -74,7 +74,7 @@
         class="ml-4 hover:underline cursor-pointer select-none font-semibold"
         :class="{
           'cursor-not-allowed pointer-events-none opacity-50 select-none':
-            currentPage === 0,
+            isFirstPage,
         }"
         @click="loadPreviousData"
       >
@@ -96,14 +96,15 @@
 
 <script>
 import { mapGetters } from "vuex";
-import moment from "moment";
-import DatePicker from "./DatePicker.vue";
 import CheckBox from "./CheckBox.vue";
+import DatePicker from "./DatePicker.vue";
+import moment from "moment";
 
 export default {
+  name: "DataTable",
   components: {
-    DatePicker,
     CheckBox,
+    DatePicker,
   },
 
   data() {
@@ -118,28 +119,31 @@ export default {
     ...mapGetters({
       data: "getDataSets",
       itemsPerPage: "getItemsPerPage",
-      filteredData: "getFilteredData",
       currentPage: "getCurrentPage",
       selectedDate: "getSelectedDate",
       selectedBoxes: "getSelectedCheckBoxes",
+      selectedDate: "getSelectedDate",
     }),
 
+    isFirstPage() {
+      return this.currentPage === 0;
+    },
+
     isLastPage() {
-      return this.currentPage === this.data.length / this.itemsPerPage - 1;
+      return (
+        this.currentPage ===
+        this.$store.state.dataSets.length / this.itemsPerPage - 1
+      );
     },
 
     isHeaderCheckBoxActivated() {
-      return this.selectedBoxes.length === this.filteredData.length;
+      return this.selectedBoxes.length === this.data.length;
     },
   },
 
   methods: {
-    formatDate(dateTime) {
-      return moment(dateTime).format("MMM Do YY");
-    },
-
-    formatTime(dateTime) {
-      return moment(dateTime).format("LT");
+    formatDate(date) {
+      return moment(date).format("MMM Do YY");
     },
 
     loadPreviousData() {
@@ -152,26 +156,26 @@ export default {
       this.$store.commit("SET_SELECTED_CHECKBOXES", []);
     },
 
-    isSelected(row) {
-      return this.selectedBoxes.includes(row);
+    isSelected(item) {
+      return this.selectedBoxes.includes(item);
     },
 
     toggleAllCheckBoxes(value) {
       if (value) {
-        this.$store.commit("SET_SELECTED_CHECKBOXES", this.filteredData);
+        this.$store.commit("SET_SELECTED_CHECKBOXES", this.data);
       } else {
         this.$store.commit("SET_SELECTED_CHECKBOXES", []);
       }
     },
 
-    toggleRowSelection(row) {
-      if (!this.isSelected(row)) {
+    toggleRowSelection(item) {
+      if (!this.isSelected(item)) {
         this.$store.commit("SET_SELECTED_CHECKBOXES", [
           ...this.selectedBoxes,
-          row,
+          item,
         ]);
       } else {
-        this.$store.commit("REMOVE_SELECTED_CHECKBOX", row);
+        this.$store.commit("REMOVE_SELECTED_CHECKBOX", item);
       }
     },
 

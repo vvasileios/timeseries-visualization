@@ -5,16 +5,17 @@ import moment from 'moment';
 export default createStore({
   state() {
     return {
-      dataSets: data, 
+      dataSets: [], 
       currentPage: 0,
       itemsPerPage: 24,
       selectedDate: null,
+      sameDate: false,
       selectedCheckBoxes: []
     }
   },
 
   getters: {
-    getFilteredData(state) {
+    getDataSets(state) {
       const selectedDate = state.selectedDate;
 
       if(!selectedDate) {
@@ -23,15 +24,15 @@ export default createStore({
         return state.dataSets.slice(startIndex, endIndex);
       }
 
-      const firstDate = moment(selectedDate[0]).format("DD/MM/YY")
-      const secondDate = moment(selectedDate[1]).format("DD/MM/YY")
+      const firstDate = moment(selectedDate[0]).format("MM/DD/YY")
+      const secondDate = moment(selectedDate[1]).format("MM/DD/YY")
 
       if (firstDate === secondDate) {
-        return state.dataSets.filter((data) => moment(data.DateTime).format("DD/MM/YY") === firstDate)
+        state.sameDate = true;
+        return state.dataSets.filter((data) => data.date === firstDate)
       } else {
         const filteredData = state.dataSets.filter((data) => {
-          const itemDate = moment(data.DateTime).format("DD/MM/YY");
-          return itemDate >= firstDate && itemDate <= secondDate;
+          return data.date >= firstDate && data.date <= secondDate;
         })
         return filteredData;
       }
@@ -39,10 +40,6 @@ export default createStore({
 
     getCurrentPage(state) {
       return state.currentPage
-    },
-
-    getDataSets(state) {
-      return state.dataSets
     },
 
     getItemsPerPage(state) {
@@ -53,12 +50,20 @@ export default createStore({
       return state.selectedDate
     },
 
+    getDateComparison(state) {
+      return state.sameDate
+    },
+
     getSelectedCheckBoxes(state) {
       return state.selectedCheckBoxes
     },
   },
 
   mutations: {
+    SET_DATA_SETS(state, dataSets) {
+      state.dataSets = dataSets;
+    },
+
     SET_CURRENT_PAGE(state, page) {
       state.currentPage = page;
     },
@@ -69,6 +74,7 @@ export default createStore({
 
     SET_INITIAL_STATE(state) {
       state.selectedDate = null;
+      state.sameDate = false;
       state.currentPage = 0;
     },
 
@@ -77,12 +83,24 @@ export default createStore({
     },
 
     REMOVE_SELECTED_CHECKBOX(state, data) {
-      state.selectedCheckBoxes = state.selectedCheckBoxes.filter(box => 
-        moment(box.DateTime).format("DD/MM/YY") !== moment(data.DateTime).format("DD/MM/YY") ||
-        moment(box.DateTime).format("LT") !== moment(data.DateTime).format("LT")
-      );
+      state.selectedCheckBoxes = state.selectedCheckBoxes.filter(item => 
+        item.date !== data.date || item.time !== data.time
+      )
     }    
   },
 
-  actions: {},
+  actions: {
+    formatAndStoreData({ commit }) {
+      const formattedData = data.map(item => {
+        return {
+          date: moment(item.DateTime).format("MM/DD/YY"),
+          time: moment(item.DateTime).format("LT"), 
+          ENTSOE_DE_DAM_Price: item.ENTSOE_DE_DAM_Price,
+          ENTSOE_GR_DAM_Price: item.ENTSOE_GR_DAM_Price,
+          ENTSOE_FR_DAM_Price: item.ENTSOE_FR_DAM_Price
+        }
+      });
+      commit('SET_DATA_SETS', formattedData);
+    }
+  },
 });
