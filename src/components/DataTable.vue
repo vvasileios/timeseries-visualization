@@ -5,7 +5,7 @@
     >
       <DatePicker />
       <button
-        v-if="selectedBoxes.length || selectedDate"
+        v-if="selectedBoxes.length > 0 || selectedDate"
         class="bg-blue-500 hover:bg-blue-600 text-white text-sm font-bold px-2 mr-4 rounded"
         @click="clearSelectedData"
       >
