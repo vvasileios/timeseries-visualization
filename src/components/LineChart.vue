@@ -39,14 +39,48 @@ export default {
 
     chartOptions() {
       return {
-        chart: { id: "linechart" },
+        chart: {
+          id: "linechart",
+          width: "100%",
+          height: "100%",
+        },
+        responsive: [
+          {
+            breakpoint: 640,
+            options: {
+              chart: {
+                type: "bar",
+                width: "100%",
+                height: "100%",
+                toolbar: {
+                  show: false,
+                },
+              },
+              title: {
+                align: "center",
+                margin: 5,
+                style: {
+                  fontSize: "10px",
+                },
+              },
+              yaxis: {
+                title: {
+                  text: "Temperature",
+                  style: {
+                    fontSize: "8px",
+                  },
+                },
+              },
+            },
+          },
+        ],
         xaxis: this.xAxisFormat(),
         title: {
           text: "Price Comparison",
-          align: "center",
+          align: "left",
           margin: 10,
           style: {
-            fontSize: "18px",
+            fontSize: "20px",
           },
         },
       };
