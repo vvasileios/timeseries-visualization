@@ -1,3 +1,16 @@
+<script setup>
+import { onMounted } from "vue";
+import { useStore } from "vuex";
+import DataTable from "./components/DataTable.vue";
+import LineChart from "./components/LineChart.vue";
+
+const store = useStore();
+
+onMounted(() => {
+  store.dispatch("formatAndStoreData");
+});
+</script>
+
 <template>
   <div class="min-h-screen">
     <header
@@ -17,21 +30,3 @@
     </main>
   </div>
 </template>
-
-<script>
-import DataTable from "./components/DataTable.vue";
-import LineChart from "./components/LineChart.vue";
-
-export default {
-  name: "App",
-
-  components: {
-    DataTable,
-    LineChart,
-  },
-
-  created() {
-    this.$store.dispatch("formatAndStoreData");
-  },
-};
-</script>

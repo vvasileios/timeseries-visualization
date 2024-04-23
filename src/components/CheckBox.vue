@@ -1,3 +1,17 @@
+<script setup>
+const props = defineProps({
+  isActivated: {
+    type: Boolean,
+    default: false,
+  },
+});
+const emit = defineEmits(["update"]);
+
+const toggleCheckBox = () => {
+  emit("update", !props.isActivated);
+};
+</script>
+
 <template>
   <input
     class="hover:cursor-pointer"
@@ -6,22 +20,3 @@
     @change="toggleCheckBox"
   />
 </template>
-
-<script>
-export default {
-  name: "CheckBox",
-
-  props: {
-    isActivated: {
-      type: Boolean,
-      default: false,
-    },
-  },
-
-  methods: {
-    toggleCheckBox() {
-      this.$emit("update", !this.isActivated);
-    },
-  },
-};
-</script>

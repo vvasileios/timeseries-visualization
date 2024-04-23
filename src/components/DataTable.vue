@@ -1,3 +1,74 @@
+<script setup>
+import { ref, computed } from "vue";
+import { useStore } from "vuex";
+import CheckBox from "./CheckBox.vue";
+import DatePicker from "./DatePicker.vue";
+import moment from "moment";
+
+const headerItems = ref([
+  "Date",
+  "Time",
+  "Germany (€)",
+  "Greece (€)",
+  "France (€)",
+]);
+const headerStyles = ref("px-4 py-3 select-none");
+const dataStyles = ref("px-4 py-3 font-medium text-gray-900 select-none");
+
+const store = useStore();
+
+const data = computed(() => store.getters.getDataSets);
+const itemsPerPage = computed(() => store.getters.getItemsPerPage);
+const currentPage = computed(() => store.getters.getCurrentPage);
+const selectedDate = computed(() => store.getters.getSelectedDate);
+const selectedBoxes = computed(() => store.getters.getSelectedCheckBoxes);
+
+const isFirstPage = computed(() => currentPage === 0);
+
+const isLastPage = computed(
+  () => currentPage === store.state.dataSets.length / itemsPerPage - 1
+);
+
+const isHeaderCheckBoxActivated = computed(
+  () => selectedBoxes.value.length === data.length
+);
+
+const formatDate = (date) => moment(date).format("MMM Do YY");
+
+const loadPreviousData = () => {
+  store.commit("SET_CURRENT_PAGE", store.state.currentPage - 1);
+  store.commit("SET_SELECTED_CHECKBOXES", []);
+};
+
+const loadNextData = () => {
+  store.commit("SET_CURRENT_PAGE", store.state.currentPage + 1);
+  store.commit("SET_SELECTED_CHECKBOXES", []);
+};
+
+const isSelected = (item) => selectedBoxes.value.includes(item);
+
+const toggleAllCheckBoxes = (value) => {
+  if (value) {
+    store.commit("SET_SELECTED_CHECKBOXES", data);
+  } else {
+    store.commit("SET_SELECTED_CHECKBOXES", []);
+  }
+};
+
+const toggleRowSelection = (item) => {
+  if (!isSelected(item)) {
+    store.commit("SET_SELECTED_CHECKBOXES", [...selectedBoxes.value, item]);
+  } else {
+    store.commit("REMOVE_SELECTED_CHECKBOX", item);
+  }
+};
+
+const clearSelectedData = () => {
+  store.commit("SET_SELECTED_CHECKBOXES", []);
+  store.commit("SET_INITIAL_STATE");
+};
+</script>
+
 <template>
   <div class="border rounded-lg mt-10 overflow-x-auto">
     <div
@@ -93,96 +164,3 @@
     </div>
   </div>
 </template>
-
-<script>
-import { mapGetters } from "vuex";
-import CheckBox from "./CheckBox.vue";
-import DatePicker from "./DatePicker.vue";
-import moment from "moment";
-
-export default {
-  name: "DataTable",
-  components: {
-    CheckBox,
-    DatePicker,
-  },
-
-  data() {
-    return {
-      headerItems: ["Date", "Time", "Germany (€)", "Greece (€)", "France (€)"],
-      headerStyles: "px-4 py-3 select-none",
-      dataStyles: "px-4 py-3 font-medium text-gray-900 select-none",
-    };
-  },
-
-  computed: {
-    ...mapGetters({
-      data: "getDataSets",
-      itemsPerPage: "getItemsPerPage",
-      currentPage: "getCurrentPage",
-      selectedDate: "getSelectedDate",
-      selectedBoxes: "getSelectedCheckBoxes",
-      selectedDate: "getSelectedDate",
-    }),
-
-    isFirstPage() {
-      return this.currentPage === 0;
-    },
-
-    isLastPage() {
-      return (
-        this.currentPage ===
-        this.$store.state.dataSets.length / this.itemsPerPage - 1
-      );
-    },
-
-    isHeaderCheckBoxActivated() {
-      return this.selectedBoxes.length === this.data.length;
-    },
-  },
-
-  methods: {
-    formatDate(date) {
-      return moment(date).format("MMM Do YY");
-    },
-
-    loadPreviousData() {
-      this.$store.commit("SET_CURRENT_PAGE", this.$store.state.currentPage - 1);
-      this.$store.commit("SET_SELECTED_CHECKBOXES", []);
-    },
-
-    loadNextData() {
-      this.$store.commit("SET_CURRENT_PAGE", this.$store.state.currentPage + 1);
-      this.$store.commit("SET_SELECTED_CHECKBOXES", []);
-    },
-
-    isSelected(item) {
-      return this.selectedBoxes.includes(item);
-    },
-
-    toggleAllCheckBoxes(value) {
-      if (value) {
-        this.$store.commit("SET_SELECTED_CHECKBOXES", this.data);
-      } else {
-        this.$store.commit("SET_SELECTED_CHECKBOXES", []);
-      }
-    },
-
-    toggleRowSelection(item) {
-      if (!this.isSelected(item)) {
-        this.$store.commit("SET_SELECTED_CHECKBOXES", [
-          ...this.selectedBoxes,
-          item,
-        ]);
-      } else {
-        this.$store.commit("REMOVE_SELECTED_CHECKBOX", item);
-      }
-    },
-
-    clearSelectedData() {
-      this.$store.commit("SET_SELECTED_CHECKBOXES", []);
-      this.$store.commit("SET_INITIAL_STATE");
-    },
-  },
-};
-</script>
