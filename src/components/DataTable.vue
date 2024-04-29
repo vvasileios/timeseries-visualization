@@ -3,7 +3,7 @@ import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import CheckBox from "./CheckBox.vue";
 import DatePicker from "./DatePicker.vue";
-import moment from "moment";
+import TableComp from "./TableComp.vue";
 
 const headerItems = ref([
   "Date",
@@ -12,8 +12,6 @@ const headerItems = ref([
   "Greece (€)",
   "France (€)",
 ]);
-const headerStyles = ref("px-4 py-3 select-none");
-const dataStyles = ref("px-4 py-3 font-medium text-gray-900 select-none");
 
 const store = useStore();
 
@@ -32,8 +30,6 @@ const isLastPage = computed(
 const isHeaderCheckBoxActivated = computed(
   () => selectedBoxes.value.length === data.length
 );
-
-const formatDate = (date) => moment(date).format("MMM Do YY");
 
 const loadPreviousData = () => {
   store.commit("SET_CURRENT_PAGE", store.state.currentPage - 1);
@@ -83,60 +79,7 @@ const clearSelectedData = () => {
         Clear
       </button>
     </div>
-
-    <table class="w-full text-sm text-left text-gray-500">
-      <thead class="text-xs text-gray-700 uppercase bg-gray-100 border-b">
-        <tr>
-          <!-- <th :class="[headerStyles]">
-            <CheckBox
-              :is-activated="isHeaderCheckBoxActivated"
-              @update="toggleAllCheckBoxes"
-            />
-          </th> -->
-          <th
-            v-for="(header, index) in headerItems"
-            :key="index"
-            :class="[headerStyles]"
-          >
-            {{ header }}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="(item, index) in data"
-          :key="index"
-          :class="[
-            isSelected(item) ? 'opacity-50' : 'hover:opacity-70',
-            'border-b',
-            'hover:cursor-pointer',
-          ]"
-          @click="toggleRowSelection(item)"
-        >
-          <!-- <td :class="[dataStyles]">
-            <CheckBox
-              :is-activated="isSelected(item)"
-              @update="(value) => toggleRowSelection(value, item)"
-            />
-          </td> -->
-          <td :class="[dataStyles]">
-            {{ formatDate(item.date) }}
-          </td>
-          <td :class="[dataStyles]">
-            {{ item.time }}
-          </td>
-          <td :class="[dataStyles]">
-            {{ item.ENTSOE_DE_DAM_Price }}
-          </td>
-          <td :class="[dataStyles]">
-            {{ item.ENTSOE_GR_DAM_Price }}
-          </td>
-          <td :class="[dataStyles]">
-            {{ item.ENTSOE_FR_DAM_Price }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <TableComp :header-data="headerItems" :body-data="data" />
     <div
       v-if="!selectedDate"
       class="w-full min-w-[435.5px] flex justify-between p-1"
