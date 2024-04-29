@@ -4,6 +4,7 @@ import { useStore } from "vuex";
 import CheckBox from "./shared/CheckBox.vue";
 import DatePicker from "./DatePicker.vue";
 import TableComp from "./shared/TableComp.vue";
+import PaginationControl from "./shared/PaginationControl.vue";
 
 const headerItems = ref([
   "Date",
@@ -16,16 +17,8 @@ const headerItems = ref([
 const store = useStore();
 
 const data = computed(() => store.getters.getDataSets);
-const itemsPerPage = computed(() => store.getters.getItemsPerPage);
-const currentPage = computed(() => store.getters.getCurrentPage);
 const selectedDate = computed(() => store.getters.getSelectedDate);
 const selectedBoxes = computed(() => store.getters.getSelectedCheckBoxes);
-
-const isFirstPage = computed(() => currentPage === 0);
-
-const isLastPage = computed(
-  () => currentPage === store.state.dataSets.length / itemsPerPage - 1
-);
 
 const isHeaderCheckBoxActivated = computed(
   () => selectedBoxes.value.length === data.length
@@ -82,30 +75,10 @@ const clearSelectedData = () => {
 
     <TableComp :header-data="headerItems" :body-data="data" />
 
-    <div
+    <PaginationControl
       v-if="!selectedDate"
-      class="w-full min-w-[435.5px] flex justify-between p-1"
-    >
-      <button
-        class="ml-4 hover:underline cursor-pointer select-none font-semibold"
-        :class="{
-          'cursor-not-allowed pointer-events-none opacity-50 select-none':
-            isFirstPage,
-        }"
-        @click="loadPreviousData"
-      >
-        Previous
-      </button>
-      <button
-        class="mr-4 hover:underline cursor-pointer select-none font-semibold"
-        :class="{
-          'cursor-not-allowed pointer-events-none opacity-50 select-none':
-            isLastPage,
-        }"
-        @click="loadNextData"
-      >
-        Next
-      </button>
-    </div>
+      @prev="loadPreviousData"
+      @next="loadNextData"
+    />
   </div>
 </template>
