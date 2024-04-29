@@ -1,9 +1,9 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
-import CheckBox from "./CheckBox.vue";
+import CheckBox from "./shared/CheckBox.vue";
 import DatePicker from "./DatePicker.vue";
-import TableComp from "./TableComp.vue";
+import TableComp from "./shared/TableComp.vue";
 
 const headerItems = ref([
   "Date",
@@ -79,7 +79,9 @@ const clearSelectedData = () => {
         Clear
       </button>
     </div>
+
     <TableComp :header-data="headerItems" :body-data="data" />
+
     <div
       v-if="!selectedDate"
       class="w-full min-w-[435.5px] flex justify-between p-1"
