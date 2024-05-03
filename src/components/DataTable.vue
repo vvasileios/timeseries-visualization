@@ -52,6 +52,13 @@ const toggleRowSelection = (item) => {
   }
 };
 
+const isFirstPage = computed(() => store.state.currentPage === 0);
+const isLastPage = computed(
+  () =>
+    store.state.currentPage ===
+    store.state.dataSets.length / store.state.itemsPerPage - 1
+);
+
 const clearSelectedData = () => {
   store.commit("SET_SELECTED_CHECKBOXES", []);
   store.commit("SET_INITIAL_STATE");
@@ -77,6 +84,8 @@ const clearSelectedData = () => {
 
     <PaginationControl
       v-if="!selectedDate"
+      :is-first-page="isFirstPage"
+      :is-last-page="isLastPage"
       @prev="loadPreviousData"
       @next="loadNextData"
     />

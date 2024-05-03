@@ -24,12 +24,6 @@ const formatDate = (date) => moment(date).format("MMM Do YY");
   <table class="w-full text-sm text-left text-gray-500">
     <thead class="text-xs text-gray-700 uppercase bg-gray-100 border-b">
       <tr>
-        <!-- <th :class="[headerStyles]">
-        <CheckBox
-          :is-activated="isHeaderCheckBoxActivated"
-          @update="toggleAllCheckBoxes"
-        />
-      </th> -->
         <th
           v-for="(header, index) in headerData"
           :key="index"
@@ -50,12 +44,6 @@ const formatDate = (date) => moment(date).format("MMM Do YY");
         ]"
         @click="toggleRowSelection(item)"
       >
-        <!-- <td :class="[dataStyles]">
-        <CheckBox
-          :is-activated="isSelected(item)"
-          @update="(value) => toggleRowSelection(value, item)"
-        />
-      </td> -->
         <td :class="[dataStyles]">
           {{ formatDate(item.date) }}
         </td>

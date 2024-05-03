@@ -1,20 +1,8 @@
 <script setup>
-import { computed } from "vue";
-import { useStore } from "vuex";
-
-const store = useStore();
-
-const isFirstPage = computed(() => store.state.currentPage === 0);
-const isLastPage = computed(
-  () =>
-    store.state.currentPage ===
-    store.state.dataSets.length / store.state.itemsPerPage - 1
-);
-
-// defineProps({
-//   isFirstPage: Boolean,
-//   isLastPage: Boolean,
-// });
+defineProps({
+  isFirstPage: Boolean,
+  isLastPage: Boolean,
+});
 
 const emit = defineEmits(["prev", "next"]);
 
