@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
+import CheckBox from "./CheckBox.vue";
 import moment from "moment";
 
 defineProps({
@@ -11,11 +12,12 @@ defineProps({
 const store = useStore();
 
 const headerStyles = ref("px-4 py-3 select-none");
-const dataStyles = ref("px-4 py-3 font-medium text-gray-900 select-none");
+const dataStyles = ref(
+  "px-4 py-3 font-medium text-gray-900 text-center select-none"
+);
+const priceHeader = ref(["Germany (€)", "Greece (€)", "France (€)"]);
 
-const selectedBoxes = computed(() => store.getters.getSelectedCheckBoxes);
-
-const isSelected = (item) => selectedBoxes.value.includes(item);
+const isPriceHeader = (header) => priceHeader.value.includes(header);
 
 const formatDate = (date) => moment(date).format("MMM Do YY");
 </script>
@@ -29,7 +31,10 @@ const formatDate = (date) => moment(date).format("MMM Do YY");
           :key="index"
           :class="[headerStyles]"
         >
-          {{ header }}
+          <div class="flex justify-center gap-2">
+            <span> {{ header }} </span>
+            <CheckBox v-if="isPriceHeader(header)" />
+          </div>
         </th>
       </tr>
     </thead>
@@ -37,12 +42,7 @@ const formatDate = (date) => moment(date).format("MMM Do YY");
       <tr
         v-for="(item, index) in bodyData"
         :key="index"
-        :class="[
-          isSelected(item) ? 'opacity-50' : 'hover:opacity-70',
-          'border-b',
-          'hover:cursor-pointer',
-        ]"
-        @click="toggleRowSelection(item)"
+        class="hover:opacity-50 border-b hover:cursor-pointer"
       >
         <td :class="[dataStyles]">
           {{ formatDate(item.date) }}
