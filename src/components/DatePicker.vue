@@ -8,8 +8,6 @@ const store = useStore();
 
 const selectedDate = ref(store.state.selectedDate);
 
-const data = computed(() => store.getters.getDataSets);
-
 const minDate = computed(() => getDate("min"));
 
 const maxDate = computed(() => getDate());
@@ -36,7 +34,6 @@ watch(
 );
 
 watch(selectedDate, (newValue) => {
-  console.log("selectedDate", newValue);
   store.commit("SET_SELECTED_CHECKBOXES", []);
   store.commit("SET_SELECTED_DATE", newValue);
 });

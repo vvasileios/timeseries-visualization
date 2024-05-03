@@ -10,7 +10,7 @@ const store = useStore();
 const data = computed(() => store.getters.getDataSets);
 const selectedDate = computed(() => store.getters.getSelectedDate);
 const dateComparison = computed(() => store.getters.getDateComparison);
-const selectedBoxes = computed(() => store.getters.getSelectedCheckBoxes);
+const selectedColumns = computed(() => store.getters.getSelectedColumn);
 
 const series = computed(() => {
   return [
@@ -76,17 +76,23 @@ watch(data, (newValue) => {
 });
 
 watch(
-  selectedBoxes,
+  selectedColumns,
   (newValue) => {
     if (newValue) {
-      chartData.value = data.value.filter((item) => {
-        return newValue.every((value) => {
-          return item.date !== value.date || item.time !== value.time;
+      chartData.value = data.value.map((item) => {
+        const newItem = { ...item };
+        Object.keys(newItem).forEach((key) => {
+          if (newValue.includes(key.toString())) {
+            delete newItem[key];
+          } else {
+            newItem[key] = Number(newItem[key]);
+          }
         });
+        return newItem;
       });
     }
   },
-  { immediate: true }
+  { immediate: true, deep: true }
 );
 
 const priceDE = () => chartData.value.map((data) => data.ENTSOE_DE_DAM_Price);

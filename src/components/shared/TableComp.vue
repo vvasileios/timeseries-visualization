@@ -19,6 +19,28 @@ const priceHeader = ref(["Germany (€)", "Greece (€)", "France (€)"]);
 
 const isPriceHeader = (header) => priceHeader.value.includes(header);
 
+const isSelected = (item) => store.state.selectedColumn.includes(item);
+
+const columnSelected = (value, column) => {
+  const columnNames = ["Germany (€)", "Greece (€)", "France (€)"];
+
+  let newName = "";
+
+  if (columnNames[0] === column) {
+    newName = "ENTSOE_DE_DAM_Price";
+  } else if (columnNames[1] === column) {
+    newName = "ENTSOE_GR_DAM_Price";
+  } else {
+    newName = "ENTSOE_FR_DAM_Price";
+  }
+
+  if (value) {
+    store.commit("SET_SELECTED_CHECKBOXES", newName);
+  } else {
+    store.commit("REMOVE_SELECTED_CHECKBOX", newName);
+  }
+};
+
 const formatDate = (date) => moment(date).format("MMM Do YY");
 </script>
 
@@ -33,7 +55,11 @@ const formatDate = (date) => moment(date).format("MMM Do YY");
         >
           <div class="flex justify-center gap-2">
             <span> {{ header }} </span>
-            <CheckBox v-if="isPriceHeader(header)" />
+            <CheckBox
+              v-if="isPriceHeader(header)"
+              :is-activated="isSelected(header)"
+              @update="(value) => columnSelected(value, header)"
+            />
           </div>
         </th>
       </tr>

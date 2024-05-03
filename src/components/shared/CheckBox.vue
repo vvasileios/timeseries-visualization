@@ -7,8 +7,8 @@ const props = defineProps({
 });
 const emit = defineEmits(["update"]);
 
-const toggleCheckBox = () => {
-  emit("update", !props.isActivated);
+const toggleCheckBox = (event) => {
+  emit("update", event.target.checked);
 };
 </script>
 
