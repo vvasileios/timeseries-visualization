@@ -28,7 +28,15 @@ const clearData = () => {
   store.commit("SET_INITIAL_STATE");
 };
 
+watch(
+  () => store.state.selectedDate,
+  (newValue) => {
+    selectedDate.value = newValue;
+  }
+);
+
 watch(selectedDate, (newValue) => {
+  console.log("selectedDate", newValue);
   store.commit("SET_SELECTED_CHECKBOXES", []);
   store.commit("SET_SELECTED_DATE", newValue);
 });
