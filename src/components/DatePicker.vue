@@ -1,12 +1,13 @@
 <script setup>
 import { ref, computed, watch } from "vue";
 import { useStore } from "vuex";
+import { dateFormatter } from "../utils/formatter";
 import VueDatePicker from "@vuepic/vue-datepicker";
 import "@vuepic/vue-datepicker/dist/main.css";
 
 const store = useStore();
 
-const selectedDate = ref(store.state.selectedDate);
+const selectedDate = ref(null);
 
 const minDate = computed(() => getDate("min"));
 
@@ -17,9 +18,9 @@ const getDate = (value) => {
 
   if (!dataSets || dataSets.length === 0) return null;
 
-  if (value === "min") return dataSets[0].date;
+  if (value === "min") return dateFormatter(dataSets[0].DateTime);
 
-  return dataSets[dataSets.length - 1].date;
+  return dateFormatter(dataSets[dataSets.length - 1].DateTime);
 };
 
 const clearData = () => {

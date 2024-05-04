@@ -1,6 +1,6 @@
 import { createStore } from "vuex";
 import data from "/timeseries.json";
-import moment from "moment";
+import { dateFormatter } from "/src/utils/formatter.js";
 
 export default createStore({
   state() {
@@ -24,15 +24,18 @@ export default createStore({
         return state.dataSets.slice(startIndex, endIndex);
       }
 
-      const firstDate = moment(selectedDate[0]).format("MM/DD/YY");
-      const secondDate = moment(selectedDate[1]).format("MM/DD/YY");
-
-      if (firstDate === secondDate) {
+      if (dateFormatter(selectedDate[0]) === dateFormatter(selectedDate[1])) {
         state.sameDate = true;
-        return state.dataSets.filter((data) => data.date === firstDate);
+        return state.dataSets.filter(
+          (data) =>
+            dateFormatter(data.DateTime) === dateFormatter(selectedDate[0])
+        );
       } else {
         const filteredData = state.dataSets.filter((data) => {
-          return data.date >= firstDate && data.date <= secondDate;
+          return (
+            dateFormatter(data.DateTime) >= dateFormatter(selectedDate[0]) &&
+            dateFormatter(data.DateTime) <= dateFormatter(selectedDate[1])
+          );
         });
         return filteredData;
       }
@@ -92,16 +95,7 @@ export default createStore({
 
   actions: {
     formatAndStoreData({ commit }) {
-      const formattedData = data.map((item) => {
-        return {
-          date: moment(item.DateTime).format("MM/DD/YY"),
-          time: moment(item.DateTime).format("LT"),
-          ENTSOE_DE_DAM_Price: item.ENTSOE_DE_DAM_Price,
-          ENTSOE_GR_DAM_Price: item.ENTSOE_GR_DAM_Price,
-          ENTSOE_FR_DAM_Price: item.ENTSOE_FR_DAM_Price,
-        };
-      });
-      commit("SET_DATA_SETS", formattedData);
+      commit("SET_DATA_SETS", data);
     },
   },
 });

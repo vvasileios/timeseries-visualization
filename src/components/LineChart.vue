@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, watch } from "vue";
 import { useStore } from "vuex";
+import { timeFormatter, dateFormatter } from "../utils/formatter";
 import apexchart from "vue3-apexcharts";
 
 const chartData = ref([]);
@@ -103,7 +104,9 @@ const priceFR = () => chartData.value.map((data) => data.ENTSOE_FR_DAM_Price);
 
 const xAxisFormat = () => {
   const format = (item) =>
-    selectedDate && !dateComparison ? item.date : item.time;
+    selectedDate && !dateComparison
+      ? dateFormatter(item.DateTime)
+      : timeFormatter(item.DateTime);
 
   const categories = chartData.value.map((data) => format(data));
 

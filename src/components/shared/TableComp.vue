@@ -2,7 +2,7 @@
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import CheckBox from "./CheckBox.vue";
-import moment from "moment";
+import { timeFormatter, tableDateFormatter } from "../../utils/formatter";
 
 defineProps({
   headerData: Array,
@@ -40,8 +40,6 @@ const columnSelected = (value, column) => {
     store.commit("REMOVE_SELECTED_CHECKBOX", newName);
   }
 };
-
-const formatDate = (date) => moment(date).format("MMM Do YY");
 </script>
 
 <template>
@@ -71,10 +69,10 @@ const formatDate = (date) => moment(date).format("MMM Do YY");
         class="hover:opacity-50 border-b hover:cursor-pointer"
       >
         <td :class="[dataStyles]">
-          {{ formatDate(item.date) }}
+          {{ tableDateFormatter(item.DateTime) }}
         </td>
         <td :class="[dataStyles]">
-          {{ item.time }}
+          {{ timeFormatter(item.DateTime) }}
         </td>
         <td :class="[dataStyles]">
           {{ item.ENTSOE_DE_DAM_Price }}
